@@ -1,27 +1,22 @@
-from typing import Union
+from dataclasses import dataclass
 
 
+@dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    def __init__(self,
-                 training_type: str,
-                 duration: float,
-                 distance: float,
-                 speed: float,
-                 calories: float) -> None:
-        self.training_type = training_type
-        self.duration = format(duration, '.3f')
-        self.distance = format(distance, '.3f')
-        self.speed = format(speed, '.3f')
-        self.calories = format(calories, '.3f')
+    training_type: str
+    duration: float
+    distance: float
+    speed: float
+    calories: float
 
     def get_message(self) -> str:
         """Возвращает информационное сообщение о тренеровке"""
-        return (f'Тип тренировки: {self.training_type}; '
-                f'Длительность: {self.duration} ч.; '
-                f'Дистанция: {self.distance} км; '
-                f'Ср. скорость: {self.speed} км/ч; '
-                f'Потрачено ккал: {self.calories}.')
+        return (f"Тип тренировки: {self.training_type}; "
+                f"Длительность: {format(self.duration, '.3f')} ч.; "
+                f"Дистанция: {format(self.distance, '.3f')} км; "
+                f"Ср. скорость: {format(self.speed, '.3f')} км/ч; "
+                f"Потрачено ккал: {format(self.calories, '.3f')}.")
 
 
 class Training:
@@ -50,7 +45,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        pass
+        ...
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -97,7 +92,10 @@ class SportsWalking(Training):
                 * self.weight + ((super().get_mean_speed()
                  * self.KMH_IN_MSEC) ** 2 / (self.height / self.CM_IN_M))
                 * self.CALORIES_SPEED_HEIGHT_MULTIPLIER * self.weight)
-                * self.duration * 60)
+                * self.duration * self.MIN_IN_H)
+
+    def __str__(self):
+        return 'Runing {}'
 
 
 class Swimming(Training):
@@ -136,9 +134,7 @@ def read_package(workout_type: str, data: list) -> Training:
     traning_classes: dict = {'SWM': Swimming,
                              'RUN': Running,
                              'WLK': SportsWalking}
-    class_traning: Union[Running,
-                         Swimming,
-                         SportsWalking] = traning_classes[workout_type](*data)
+    class_traning: Training = traning_classes[workout_type](*data)
     return class_traning
 
 
