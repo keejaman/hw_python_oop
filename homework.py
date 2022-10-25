@@ -94,9 +94,6 @@ class SportsWalking(Training):
                 * self.CALORIES_SPEED_HEIGHT_MULTIPLIER * self.weight)
                 * self.duration * self.MIN_IN_H)
 
-    def __str__(self):
-        return 'Runing {}'
-
 
 class Swimming(Training):
     """Тренировка: плавание."""
